@@ -1,4 +1,4 @@
-site_name: ${{ values.app_name }}
+site_name: ${{ values.vpc_name }}
 site_description: ${{ values.description }}
 repo_url: https://${{ values.git_host_url }}/${{ values.git_owner_name }}/${{ values.git_repo_name }}
 edit_uri: edit/main/techdocs/docs
@@ -13,7 +13,3 @@ theme:
       - "Arial"
       - "Helvetica"
       - "sans-serif"
-
-# Note for content editors, edit only the section below
-#nav:
-#  - ${{ values.app_name }} Documentation: index.md
