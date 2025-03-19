@@ -17,25 +17,19 @@ locals {
       "${{ values.private_subnet_3 }}",
     ]
 
-    {%- if values.enable_nat_gateway == true %}
-    enable_nat_gateway = true
-    {%- endif %}
-    {%- if values.enable_nat_gateway == false %}
-    enable_nat_gateway = false
-    {%- endif %}
-    {%- if values.nat_gateway == single %}
-    single_nat_gateway = true
+    {%- if values.nat_gateway == "single" %}
+    single_nat_gateway     = true
     one_nat_gateway_per_az = false
     {%- endif %}
-    {%- if values.nat_gateway == per_az %}
-    single_nat_gateway = false
+    {%- if values.nat_gateway == "single" %}
+    single_nat_gateway     = false
     one_nat_gateway_per_az = true
     {%- endif %}
 
 
     tags = {
       terraform = "true",
-      owner = "${{ values.owner }}"
+      owner     = "${{ values.owner }}"
     }
   }
 }

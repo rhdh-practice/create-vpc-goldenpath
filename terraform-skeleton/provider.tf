@@ -4,7 +4,7 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = "rhdh-practice-terraform-tfstate"
+    bucket = "rhdh-practice-tfstate"
     key    = "${{ values.vpc_name }}/terraform.tfstate"
     region = "${{ values.aws_region }}"
   }

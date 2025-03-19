@@ -18,7 +18,7 @@ module "vpc" {
   public_subnets  = local.vpc.public_subnets
   private_subnets = local.vpc.private_subnets
 
-  enable_nat_gateway     = true 
+  enable_nat_gateway     = true
   single_nat_gateway     = local.single_nat_gateway
   one_nat_gateway_per_az = local.one_nat_gateway_per_az
 
