@@ -21,7 +21,7 @@ locals {
     single_nat_gateway     = true
     one_nat_gateway_per_az = false
     {%- endif %}
-    {%- if values.nat_gateway == "single" %}
+    {%- if values.nat_gateway == "per_az" %}
     single_nat_gateway     = false
     one_nat_gateway_per_az = true
     {%- endif %}
