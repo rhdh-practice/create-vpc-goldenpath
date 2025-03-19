@@ -6,7 +6,7 @@ metadata:
   labels:
     resource: vpc
   links:
-    - url: https://${{ values.git_host_url }}/${{ values.git_owner_name }}/${{ values.git_repo_name }}
+    - url: https://${{ values.git_host_url }}/${{ values.git_owner_name }}/${{ values.git_repo_name }} 
       title: Terraform Repository
       icon: github
 spec:

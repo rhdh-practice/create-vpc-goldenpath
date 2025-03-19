@@ -141,6 +141,9 @@ spec:
         url: ./terraform-skeleton
         values:
           owner: ${{ parameters.owner }}
+          git_repo_name: ${{ parameters.git_repo_name }}
+          git_host_url: ${{ parameters.git_host_url }}
+          git_owner_name: ${{ parameters.git_owner_name }}
           vpc_name: ${{ parameters.vpc_name }}
           aws_region: ${{ parameters.aws_region }}
           vpc_cidr: ${{ parameters.vpc_cidr }}
