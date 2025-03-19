@@ -1,0 +1,26 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.vpc_name }}
+  description: "AWSのVPCリソース情報です。CIDRやリージョンなどの情報を管理します。"
+  labels:
+    resource: vpc
+  links:
+    - url: https://${{ values.git_host_url }}/${{ values.git_owner_name }}/${{ values.git_repo_name }}
+      title: Terraform Repository
+      icon: github
+spec:
+  type: resource
+  owner: ${{ values.owner }}
+  lifecycle: production
+  parameters:
+    provider: aws
+    region: ${{ values.aws_region }}
+    cidr: ${{ values.vpc_cidr }}
+    public_subnet_1: ${{ values.public_subnet_1 }}
+    public_subnet_2: ${{ values.public_subnet_2 }}
+    public_subnet_3: ${{ values.public_subnet_3 }}
+    private_subnet_1: ${{ values.private_subnet_1 }}
+    private_subnet_2: ${{ values.private_subnet_2 }}
+    private_subnet_3: ${{ values.private_subnet_3 }}
+    nat_gateway: ${{ values.nat_gateway }}

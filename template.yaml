@@ -1,0 +1,180 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-vpc-template
+  title: Create a VPC
+  description: 3つのAZを持つVPCを作成するテンプレート 
+  tags:
+    - recommended
+    - terraform
+spec:
+  owner: user:default/skitamura7446
+  type: service
+
+  parameters:
+    - title: 作成するComponentの情報 
+      requiored:
+        - vpc_name
+        - owner
+        - system
+      properties:
+        vpc_name:
+          title: VPC名
+          description: 作成するVPC名を指定してください。
+          type: string
+          default: "vpc-sample"
+        owner:
+          title: オーナー
+          type: string
+          description: 作成するComponentのオーナーを選択してください。
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind:
+                - Group
+                - User
+#        system:
+#          title: System
+#          type: string
+#          ui:field: EntityPicker
+#          ui:options:
+#            catalogFilter:
+#              kind:
+#                - System
+
+    - title: VPCの情報 
+      required:
+        - aws_region
+        - vpc_cidr
+        - public_subnets
+        - private_subnets
+        - nat_gateway
+      properties:
+        aws_region:
+          title: AWSリージョン
+          type: string
+          description: 作成するVPCのリージョンを選択してください。
+          default: "ap-northeast-1"
+          enum: 
+            - ap-northeast-1
+            - us-east-1
+          enumNames:
+            - ap-northeast-1
+            - us-east-1
+        vpc_cidr:
+          title: VPC CIDR
+          type: string
+          description: 作成するVPCのCIDR(X.X.X.X/X)を指定してください。
+          default: "10.0.0.0/16"
+        public_subnets:
+          title: パブリックサブネット
+          type: object
+          description: パブリックサブネットの情報を指定してください。
+          properties:
+            public_subnet_1:
+              title: "パブリックサブネット 1"
+              type: string
+              default: "10.0.0.0/20"
+            public_subnet_2:
+              title: "パブリックサブネット 2"
+              type: string
+              default: "10.0.16.0/20"
+            public_subnet_3:
+              title: "パブリックサブネット 3"
+              type: string
+              default: "10.0.32.0/20"
+        private_subnets:
+          title: プライベートサブネット
+          type: object
+          description: プライベートサブネットの情報を指定してください。
+          properties:
+            private_subnet_1:
+              title: "プライベートサブネット 1"
+              type: string
+              default: "10.0.128.0/20"
+            private_subnet_2:
+              title: "プライベートサブネット 2"
+              type: string
+              default: "10.0.144.0/20"
+            private_subnet_3:
+              title: "プライベートサブネット 3"
+              type: string
+              default: "10.0.160.0/20"
+        nat_gateway:
+          title: NATゲートウェイ
+          description: NATゲートウェイの配置を選択してください。 
+          type: string
+          enum:
+            - single
+            - per_az
+          enumNames:
+            - 1つのNATゲートウェイを構築
+            - AZ毎にNATゲートウェイを構築
+
+    - title: GitHubリポジトリの情報
+      required:
+        - git_repo_name
+        - git_host_url
+        - git_owner_name
+      properties:
+        git_repo_name:
+          title: GitHubリポジトリ名
+          description: 生成するGitHubリポジトリ名を入力してください。
+          type: string
+          default: vpc-sample
+        git_host_url:
+          title: GitHub URL
+          description: GitHubリポジトリのURLを入力してください。
+          type: string
+          default: github.com
+        git_owner_name:
+          title: GitHub Organization名
+          description: GitHubリポジトリを生成するGitHub Organization名を入力してください。
+          type: string
+          default: rhdh-practice
+
+  steps:
+    - id: terraform-template
+      name: Fetch Terraform skeleton 
+      action: fetch:template
+      input:
+        url: ./terraform-skeleton
+        values:
+          owner: ${{ parameters.owner }}
+          vpc_name: ${{ parameters.vpc_name }}
+          aws_region: ${{ parameters.aws_region }}
+          vpc_cidr: ${{ parameters.vpc_cidr }}
+          public_subnet_1: ${{ parameters.public_subnets.public_subnet_1 }}
+          public_subnet_2: ${{ parameters.public_subnets.public_subnet_2 }}
+          public_subnet_3: ${{ parameters.public_subnets.public_subnet_3 }}
+          private_subnet_1: ${{ parameters.private_subnets.private_subnet_1 }}
+          private_subnet_2: ${{ parameters.private_subnets.private_subnet_2 }}
+          private_subnet_3: ${{ parameters.private_subnets.private_subnet_3 }}
+          nat_gateway: ${{ parameters.nat_gateway }}
+        targetPath: ./tenant
+
+    - id: publish-terraform
+      name: Push Terraform Repo to GitHub
+      action: publish:github
+      input:
+        repoUrl: ${{ parameters.git_host_url }}?owner=${{ parameters.git_owner_name }}&repo=${{ parameters.git_repo_name }}
+        repoVisibility: public
+        sourcePath: ./tenant
+        defaultBranch: develop
+        protectDefaultBranch: false
+
+    - id: register
+      name: Register Catalog into Developer Hub
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish-terraform'].output.repoContentsUrl }}
+        catalogInfoPath: "/catalog-info.yaml"
+
+  output:
+    links:
+      - title: Componentを開く
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}
+      - title: Gitリポジトリを開く
+        url: ${{ steps['publish-terraform'].output.remoteUrl }}
+        icon: github
