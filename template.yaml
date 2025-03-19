@@ -33,14 +33,6 @@ spec:
               kind:
                 - Group
                 - User
-#        system:
-#          title: System
-#          type: string
-#          ui:field: EntityPicker
-#          ui:options:
-#            catalogFilter:
-#              kind:
-#                - System
 
     - title: VPCの情報 
       required:
