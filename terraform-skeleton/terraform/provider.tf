@@ -6,6 +6,6 @@ terraform {
   backend "s3" {
     bucket = "rhdh-practice-tfstate"
     key    = "${{ values.vpc_name }}/terraform.tfstate"
-    region = "${{ values.aws_region }}"
+    region = "ap-northeast-1"
   }
 }
