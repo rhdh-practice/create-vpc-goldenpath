@@ -14,6 +14,7 @@ metadata:
     github.com/project-slug: ${{ values.git_owner_name }}/${{ values.git_repo_name }}
 spec:
   type: resource
+  resource: vpc
   owner: ${{ values.owner }}
   lifecycle: production
   parameters:
@@ -27,26 +28,26 @@ spec:
     private_subnet_2: ${{ values.private_subnet_2 }}
     private_subnet_3: ${{ values.private_subnet_3 }}
     nat_gateway: ${{ values.nat_gateway }}
----
-apiVersion: backstage.io/v1alpha1
-kind: Resource
-metadata:
-  name: ${{ values.vpc_name }}
-  description: "AWSのVPCリソース情報です。CIDRやリージョンなどの情報を管理します。"
-  tags:
-    - aws
-    - vpc
-spec:
-  type: vpc
-  owner: ${{ values.owner }}
-  parameters:
-    provider: aws
-    region: ${{ values.aws_region }}
-    cidr: ${{ values.vpc_cidr }}
-    public_subnet_1: ${{ values.public_subnet_1 }}
-    public_subnet_2: ${{ values.public_subnet_2 }}
-    public_subnet_3: ${{ values.public_subnet_3 }}
-    private_subnet_1: ${{ values.private_subnet_1 }}
-    private_subnet_2: ${{ values.private_subnet_2 }}
-    private_subnet_3: ${{ values.private_subnet_3 }}
-    nat_gateway: ${{ values.nat_gateway }}
+#---
+#apiVersion: backstage.io/v1alpha1
+#kind: Resource
+#metadata:
+#  name: ${{ values.vpc_name }}
+#  description: "AWSのVPCリソース情報です。CIDRやリージョンなどの情報を管理します。"
+#  tags:
+#    - aws
+#    - vpc
+#spec:
+#  type: vpc
+#  owner: ${{ values.owner }}
+#  parameters:
+#    provider: aws
+#    region: ${{ values.aws_region }}
+#    cidr: ${{ values.vpc_cidr }}
+#    public_subnet_1: ${{ values.public_subnet_1 }}
+#    public_subnet_2: ${{ values.public_subnet_2 }}
+#    public_subnet_3: ${{ values.public_subnet_3 }}
+#    private_subnet_1: ${{ values.private_subnet_1 }}
+#    private_subnet_2: ${{ values.private_subnet_2 }}
+#    private_subnet_3: ${{ values.private_subnet_3 }}
+#    nat_gateway: ${{ values.nat_gateway }}
